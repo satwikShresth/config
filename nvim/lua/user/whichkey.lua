@@ -1,67 +1,45 @@
-local M = {
-  "folke/which-key.nvim",
+local M = { 
+  "folke/which-key.nvim", 
   event = "VeryLazy",
   commit = "ce741eb559c924d72e3a67d2189ad3771a231414",
 }
-
 function M.config()
   local mappings = {
     ["q"] = { "<cmd>confirm q<CR>", "Quit" },
     ["/"] = { "<Plug>(comment_toggle_linewise_current)", "Comment" },
     ["h"] = { "<cmd>nohlsearch<CR>", "No Highlight" },
-    ["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" },
+    ["e"] = { "<cmd>Neotree<CR>", "Explorer" },
+    ["s"] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], "replace word"},
+    ["S"] = { "<cmd> SessionSave<CR>" , "Save current session"},
+    ["x"] = { "<cmd>!chmod +x %<CR>","make current file executable"},
+    ["H"] = { "<cmd>lua require('user.extras.harpoon').mark_file()<cr>", "Harpoon"},
+    ["<leader>"] = {function() vim.cmd("luafile ~/.config/nvim/init.lua") end, "reload lua file"},
+
     b = {
       name = "Buffers",
       b = { "<cmd>Telescope buffers previewer=false<cr>", "Find" },
     },
-    d = {
-      name = "Debug",
-      t = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>", "Toggle Breakpoint" },
-      b = { "<cmd>lua require'dap'.step_back()<cr>", "Step Back" },
-      c = { "<cmd>lua require'dap'.continue()<cr>", "Continue" },
-      C = { "<cmd>lua require'dap'.run_to_cursor()<cr>", "Run To Cursor" },
-      d = { "<cmd>lua require'dap'.disconnect()<cr>", "Disconnect" },
-      g = { "<cmd>lua require'dap'.session()<cr>", "Get Session" },
-      i = { "<cmd>lua require'dap'.step_into()<cr>", "Step Into" },
-      o = { "<cmd>lua require'dap'.step_over()<cr>", "Step Over" },
-      u = { "<cmd>lua require'dap'.step_out()<cr>", "Step Out" },
-      p = { "<cmd>lua require'dap'.pause()<cr>", "Pause" },
-      r = { "<cmd>lua require'dap'.repl.toggle()<cr>", "Toggle Repl" },
-      s = { "<cmd>lua require'dap'.continue()<cr>", "Start" },
-      q = { "<cmd>lua require'dap'.close()<cr>", "Quit" },
-      U = { "<cmd>lua require'dapui'.toggle({reset = true})<cr>", "Toggle UI" },
-    },
-    p = {
-      name = "Plugins",
-      i = { "<cmd>Lazy install<cr>", "Install" },
-      s = { "<cmd>Lazy sync<cr>", "Sync" },
-      S = { "<cmd>Lazy clear<cr>", "Status" },
-      c = { "<cmd>Lazy clean<cr>", "Clean" },
-      u = { "<cmd>Lazy update<cr>", "Update" },
-      p = { "<cmd>Lazy profile<cr>", "Profile" },
-      l = { "<cmd>Lazy log<cr>", "Log" },
-      d = { "<cmd>Lazy debug<cr>", "Debug" },
-    },
-
     f = {
       name = "Find",
-      b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
       c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
-      f = { "<cmd>Telescope find_files<cr>", "Find files" },
-      p = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
-      t = { "<cmd>Telescope live_grep<cr>", "Find Text" },
-      s = { "<cmd>Telescope grep_string<cr>", "Find String" },
+      f = { "<cmd>call FuzzyCurWorkDir()<cr>", "Find files (cwd)" },
+      F = { "<cmd>call FuzzyCurBuffDir()<cr>", "Find files (cbd)" },
+      s ={
+        a = { "<cmd>call FuzzyRipAllCurrBuff()<cr>", "Find String (all open buffers)" },
+        s = { "<cmd>call FuzzyRipCurrBuff()<cr>", "Find String (cb)" },
+        S = { "<cmd>call FuzzyRipCurrBuffDir()<cr>", "Find String (cbd)" },
+        w = { "<cmd>call FuzzyRipCurrWorkDir()<cr>", "Find string (cwd)" },
+      },
       h = { "<cmd>Telescope help_tags<cr>", "Help" },
       H = { "<cmd>Telescope highlights<cr>", "Highlights" },
-      i = { "<cmd>lua require('telescope').extensions.media_files.media_files()<cr>", "Media" },
-      l = { "<cmd>Telescope resume<cr>", "Last Search" },
       M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
       r = { "<cmd>Telescope oldfiles<cr>", "Recent File" },
       R = { "<cmd>Telescope registers<cr>", "Registers" },
       k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
       C = { "<cmd>Telescope commands<cr>", "Commands" },
+      u = { "<cmd>Telescope undo<cr>", "Undo Tree" },
+      p = { "<cmd>Telescope persisted<cr>", "Sessions" },
     },
-
     g = {
       name = "Git",
       g = { "<cmd>Neogit<cr>", "Neogit" },
@@ -88,7 +66,6 @@ function M.config()
         "Git Diff",
       },
     },
-
     l = {
       name = "LSP",
       a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
@@ -144,6 +121,7 @@ function M.config()
     silent = true, -- use `silent` when creating keymaps
     noremap = true, -- use `noremap` when creating keymaps
     nowait = true, -- use `nowait` when creating keymaps
+    timeoutlen=50 
   }
 
   -- NOTE: Prefer using : over <cmd> as the latter avoids going back in normal-mode.
@@ -173,7 +151,7 @@ function M.config()
       registers = false, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
       spelling = {
         enabled = true,
-        suggestions = 20,
+        suggestions = 30,
       }, -- use which-key for spelling hints
       -- the presets plugin, adds help for a bunch of default keybindings in Neovim
       -- No actual key bindings are created
@@ -199,7 +177,7 @@ function M.config()
       winblend = 0,
     },
     layout = {
-      height = { min = 4, max = 25 }, -- min and max height of the columns
+      height = { min = 5, max = 25 }, -- min and max height of the columns
       width = { min = 20, max = 50 }, -- min and max width of the columns
       spacing = 3, -- spacing between columns
       align = "left", -- align columns left, center or right

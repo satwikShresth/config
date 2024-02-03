@@ -54,8 +54,11 @@ function M.config()
   "gopls",
   "pylsp",
   "clangd",
-  "rust_analyzer"
-} 
+  "rust_analyzer",
+  "tsserver",
+  "volar",
+  "grammarly",
+}
 
   local default_diagnostic_config = {
     signs = {

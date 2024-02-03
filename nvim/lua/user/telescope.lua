@@ -1,7 +1,10 @@
 local M = {
   "nvim-telescope/telescope.nvim",
-  dependencies = { { "nvim-telescope/telescope-fzf-native.nvim", build = "make", lazy = true } },
-  commit = "74ce793a60759e3db0d265174f137fb627430355",
+  dependencies = { { "nvim-telescope/telescope-fzf-native.nvim", build = "make", lazy = true },
+    "nvim-lua/plenary.nvim",
+    "debugloop/telescope-undo.nvim",
+    "olimorris/persisted.nvim"
+  },
   lazy = true,
   cmd = "Telescope",
 }
@@ -9,6 +12,14 @@ local M = {
 function M.config()
   local icons = require "user.icons"
   local actions = require "telescope.actions"
+
+  require("persisted").setup({
+    use_git_branch = true, -- create session files based on the branch of a git enabled repository
+    default_branch = "main", -- the branch to load if a session file is not found for the current branch
+    autosave = false, -- automatically save session files when exiting Neovim
+    should_autosave = nil, -- function to determine if a session should be autosaved
+    autoload = false, -- automatically load the session for the cwd on Neovim startup
+  })
 
   require("telescope").setup {
     defaults = {
@@ -52,18 +63,6 @@ function M.config()
       },
     },
     pickers = {
-      live_grep = {
-        theme = "dropdown",
-      },
-
-      grep_string = {
-        theme = "dropdown",
-      },
-
-      find_files = {
-        theme = "dropdown",
-        previewer = false,
-      },
 
       buffers = {
         theme = "dropdown",
@@ -115,8 +114,17 @@ function M.config()
         override_file_sorter = true, -- override the file sorter
         case_mode = "smart_case", -- or "ignore_case" or "respect_case"
       },
+      undo = {
+        side_by_side = true,
+        layout_strategy = "vertical",
+        layout_config = {
+          preview_height = 0.8,
+      },
+    },
     },
   }
+  require("telescope").load_extension("undo")
+  require("telescope").load_extension("persisted")
 end
 
 return M

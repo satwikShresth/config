@@ -13,7 +13,10 @@ M.servers = {
   "gopls",
   "pylsp",
   "clangd",
-  "rust_analyzer"
+  "rust_analyzer",
+  "tsserver",
+  "volar",
+  "grammarly"
 }
 
 function M.config()
@@ -24,6 +27,7 @@ function M.config()
   }
   require("mason-lspconfig").setup {
     ensure_installed = M.servers,
+    automatic_installation = true
   }
 end
 

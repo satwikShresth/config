@@ -1,12 +1,17 @@
 local M = {
-  "LunarVim/primer.nvim",
+  -- "lunarvim/darkplus.nvim",
+  -- "rebelot/kanagawa.nvim",
+  "luisiacc/gruvbox-baby",
   lazy = false, -- make sure we load this during startup if it is your main colorscheme
   priority = 1000, -- make sure to load this before all the other start plugins
-  commit = "b8d7e08eed9a61eb2f49b9196b01f7f2932735ff",
+  branch='main'
 }
 
 function M.config()
-  vim.cmd.colorscheme "primer_dark"
+  -- vim.cmd.colorscheme "darkplus"
+  -- vim.cmd.colorscheme "kanagawa-dragon"
+  
+  vim.cmd.colorscheme "gruvbox-baby"
 end
 
 return M

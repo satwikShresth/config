@@ -111,8 +111,8 @@ function M.config()
           open_win_config = function()
             local screen_w = vim.opt.columns:get()
             local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
-            local window_w = screen_w * WIDTH_RATIO
-            local window_h = screen_h * HEIGHT_RATIO
+            local window_w = screen_w * width_ratio
+            local window_h = screen_h * height_ratio
             local window_w_int = math.floor(window_w)
             local window_h_int = math.floor(window_h)
             local center_x = (screen_w - window_w) / 2
