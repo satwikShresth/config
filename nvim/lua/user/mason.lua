@@ -12,7 +12,6 @@ M.servers = {
   "marksman",
   "gopls",
   "pylsp",
-  "clangd",
   "rust_analyzer",
   "tsserver",
   "volar",
